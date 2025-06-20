@@ -7,10 +7,10 @@ const sql = fs.readFileSync(sqlPath, 'utf8');
 
 db.query(sql)
   .then(() => {
-    console.log('✅ dogwalks.sql has been imported successfully.');
+    console.log(' dogwalks.sql has been imported successfully.');
     process.exit(0);
   })
   .catch((err) => {
-    console.error('❌ Error importing SQL file:', err.message);
+    console.error(' Error importing SQL file:', err.message);
     process.exit(1);
   });
