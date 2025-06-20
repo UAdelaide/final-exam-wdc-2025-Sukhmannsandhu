@@ -1,24 +1,16 @@
 const fs = require('fs');
 const path = require('path');
-const pool = require('./models/db');
+const db = require('./models/db'); // Your database connection
 
-async function runSQLFile() {
-  const filePath = path.join(__dirname, '../part1/dogwalks.sql');
-  const sql = fs.readFileSync(filePath, 'utf8');
+const sqlPath = path.join(__dirname, 'part1', 'dogwalks.sql');
+const sql = fs.readFileSync(sqlPath, 'utf8');
 
-  try {
-    const queries = sql.split(/;\s*$/m); // Split by semicolons
-    for (const query of queries) {
-      if (query.trim()) {
-        await pool.query(query);
-      }
-    }
-    console.log('✅ dogwalks.sql executed successfully!');
+db.query(sql)
+  .then(() => {
+    console.log('✅ dogwalks.sql has been imported successfully.');
     process.exit(0);
-  } catch (err) {
-    console.error('❌ Error running SQL file:', err);
+  })
+  .catch((err) => {
+    console.error('❌ Error importing SQL file:', err.message);
     process.exit(1);
-  }
-}
-
-runSQLFile();
+  });
