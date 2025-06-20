@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const db = require('../models/db');
 
-// GET all open walk requests
-router.get('/walkrequests/open', async (req, res) => {
+// GET /api/walkrequests/open
+router.get('/open', async (req, res) => {
   try {
     const [rows] = await db.query(`
       SELECT wr.request_id, d.name AS dog_name, wr.requested_time, wr.duration_minutes, wr.location, u.username AS owner_username
@@ -14,7 +14,7 @@ router.get('/walkrequests/open', async (req, res) => {
     `);
     res.json(rows);
   } catch (error) {
-    console.error('SQL Error:', error);
+    console.error('Error fetching open walk requests:', error);
     res.status(500).json({ error: 'Failed to fetch open walk requests' });
   }
 });
