@@ -28,6 +28,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
+// GET /me - check if user is logged in
 router.get('/me', (req, res) => {
   if (!req.session.user) {
     return res.status(401).json({ error: 'Not logged in' });
@@ -49,10 +50,24 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
+    // Save login session
+    req.session.user = rows[0];
+
     res.json({ message: 'Login successful', user: rows[0] });
   } catch (error) {
     res.status(500).json({ error: 'Login failed' });
   }
+});
+
+// ✅ LOGOUT route
+router.post('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      return res.status(500).json({ error: 'Logout failed' });
+    }
+    res.clearCookie('connect.sid'); // Clear session cookie
+    res.json({ message: 'Logged out successfully' });
+  });
 });
 
 module.exports = router;
