@@ -69,6 +69,7 @@ VALUES
   ('alice123', 'alice@example.com', 'hashed123', 'owner'),
   ('bobwalker', 'bob@example.com', 'hashed456', 'walker'),
   ('carol123', 'carol@example.com', 'hashed789', 'owner');
+
 -- Sample Dogs (Total: 5)
 INSERT INTO Dogs (owner_id, name, size)
 VALUES
@@ -86,3 +87,4 @@ VALUES
   ((SELECT dog_id FROM Dogs WHERE name = 'Buddy'), '2025-06-11 10:15:00', 25, 'Main Street', 'open'),
   ((SELECT dog_id FROM Dogs WHERE name = 'Coco'), '2025-06-12 15:00:00', 35, 'Botanic Gardens', 'completed'),
   ((SELECT dog_id FROM Dogs WHERE name = 'Rocky'), '2025-06-13 17:45:00', 40, 'Riverside Track', 'cancelled');
+dogwalk
