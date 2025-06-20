@@ -34,23 +34,25 @@ router.get('/me', (req, res) => {
   res.json(req.session.user);
 });
 
-// ✅ Login using email instead of username
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const [rows] = await db.query(`
-      SELECT user_id, username, role FROM Users
-      WHERE email = ? AND password_hash = ?
-    `, [email, password]);
+    const [rows] = await db.query(
+      'SELECT user_id, username, email, role FROM Users WHERE email = ? AND password_hash = ?',
+      [email, password]
+    );
 
     if (rows.length === 0) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    req.session.user = rows[0]; // Save user in session
+    // Save session if needed
+    req.session.user = rows[0];
+
     res.json({ message: 'Login successful', user: rows[0] });
   } catch (error) {
+    console.error('❌ Login error:', error);
     res.status(500).json({ error: 'Login failed' });
   }
 });
