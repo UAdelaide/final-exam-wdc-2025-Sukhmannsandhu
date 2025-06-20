@@ -69,7 +69,6 @@ VALUES
   ('alice123', 'alice@example.com', 'hashed123', 'owner'),
   ('bobwalker', 'bob@example.com', 'hashed456', 'walker'),
   ('carol123', 'carol@example.com', 'hashed789', 'owner');
-
 -- Sample Dogs (Total: 5)
 INSERT INTO Dogs (owner_id, name, size)
 VALUES
