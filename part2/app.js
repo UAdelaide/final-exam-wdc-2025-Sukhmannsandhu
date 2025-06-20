@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const pool = require('./models/db');
 
 // Route files
@@ -13,15 +14,21 @@ const port = 8080;
 // Middleware
 app.use(express.json());
 
-// Serve static HTML files from public/
+// ✅ Serve static HTML files (like index.html, CSS, JS, images)
 app.use(express.static('public'));
 
-// API routes
+// ✅ Homepage route — sends index.html from /public
+app.get('/', (req, res) => {
+  res.sendFile('index.html', { root: path.join(__dirname, 'public') });
+});
+
+// ✅ API routes
 app.use('/users', userRoutes);
 app.use('/api/dogs', dogRoutes);
 app.use('/api/walkrequests', walkRoutes);
 app.use('/api/walkers', walkerRoutes);
 
-// Root test route (for JSON response)
-app.get('/', (req, res) => {
-  res.sendFile(__dirname
+// ✅ Start server
+app.listen(port, () => {
+  console.log(`✅ Server is running on port ${port}`);
+});
