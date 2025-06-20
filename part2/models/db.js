@@ -3,8 +3,8 @@ const mysql = require('mysql2/promise');
 const pool = mysql.createPool({
   host: 'localhost',
   user: 'root',
-  password: '', // use your actual password if any
-  multipleStatements: true // ✅ this is the fix!
+  password: '',          // or your MySQL root password
+  database: 'DogWalkService'
 });
 
 module.exports = pool;
