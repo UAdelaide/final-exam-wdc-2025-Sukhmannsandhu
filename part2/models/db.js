@@ -1,12 +1,11 @@
-const mysql = require('mysql2/promise');
+const mysql = require('mysql2');
 
 const pool = mysql.createPool({
   host: 'localhost',
   user: 'root',
+  password: '', // use your password if set, else leave blank
   database: 'DogWalkService',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
+  multipleStatements: true // important for multiple SQL commands
 });
 
-module.exports = pool;
+module.exports = pool.promise();
