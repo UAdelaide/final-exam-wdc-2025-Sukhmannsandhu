@@ -1,27 +1,27 @@
 const express = require('express');
 const pool = require('./models/db');
+
+// Route files
 const userRoutes = require('./routes/userRoutes');
-const walkRoutes = require('./routes/walkerRoutes');
 const dogRoutes = require('./routes/dogRoutes');
+const walkRoutes = require('./routes/walkRoutes');
 const walkerRoutes = require('./routes/walkerRoutes');
 
 const app = express();
 const port = 8080;
 
-// Middleware to parse JSON
+// Middleware
 app.use(express.json());
 
-// Root test route
-app.get('/', (req, res) => {
-  res.json({ message: 'Server is working with MySQL2!' });
-});
+// Serve static HTML files from public/
+app.use(express.static('public'));
 
-// Base routes
+// API routes
 app.use('/users', userRoutes);
 app.use('/api/dogs', dogRoutes);
 app.use('/api/walkrequests', walkRoutes);
 app.use('/api/walkers', walkerRoutes);
-app.use(express.static('public'));
-app.listen(port, () => {
-  console.log(`✅ Server is running on port ${port}`);
-});
+
+// Root test route (for JSON response)
+app.get('/', (req, res) => {
+  res.sendFile(__dirname
