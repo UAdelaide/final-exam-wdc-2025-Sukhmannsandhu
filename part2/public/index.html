@@ -2,19 +2,44 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dog Walking Service</title>
+  <title>🐕💥 Amazing Dog Walking!! 💥🐕</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    body {
+      background: repeating-linear-gradient(45deg, yellow, red 10px, lime 10px, cyan 20px);
+      font-family: "Papyrus", cursive;
+      color: hotpink;
+      text-align: center;
+      padding: 20px;
+    }
+    button {
+      font-size: 24px;
+      background-color: magenta;
+      border: 5px dashed orange;
+      padding: 15px;
+      cursor: crosshair;
+    }
+    img {
+      margin-top: 20px;
+      border: 10px groove purple;
+      max-width: 90%;
+    }
+  </style>
 </head>
-<body class="bg-light">
+<body>
 
-  <div id="app" class="container py-5">
-    <h1 class="mb-4 text-primary">{{ message }}</h1>
-    <p class="lead">Connect with trusted walkers for your beloved dog!</p>
+  <div id="app">
+    <h1>🔥🐾 Welcome to the Ultimate Dog Walking Extravaganza 🐾🔥</h1>
+    <p>Click below... if you dare 🧠</p>
+    <button @click="getDog">UNLEASH THE DOG OF THE DAY 🐶🚀</button>
 
-    <a href="owner-dashboard.html" class="btn btn-outline-primary me-2">Owner Dashboard</a>
-    <a href="walker-dashboard.html" class="btn btn-outline-success">Walker Dashboard</a>
+    <div v-if="dogImage">
+      <img :src="dogImage" alt="">
+      <p>This dog was randomly selected by AI! 🎲</p>
+    </div>
+
+    <a href="#">Click here now!!!</a>
   </div>
 
   <script>
@@ -22,12 +47,18 @@
     createApp({
       data() {
         return {
-          message: 'Welcome to the Dog Walking Service!'
+          dogImage: ''
         };
+      },
+      methods: {
+        async getDog() {
+          const res = await fetch('https://dog.ceo/api/breeds/image/random');
+          const data = await res.json();
+          this.dogImage = data.message;
+        }
       }
     }).mount('#app');
   </script>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
