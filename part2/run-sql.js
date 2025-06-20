@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const db = require('./models/db'); // Your database connection
 
-const sqlPath = path.join(__dirname, 'part1', 'dogwalks.sql');
+const sqlPath = path.join(__dirname, '../part1/dogwalks.sql'); // Fix this path
 const sql = fs.readFileSync(sqlPath, 'utf8');
 
 db.query(sql)
