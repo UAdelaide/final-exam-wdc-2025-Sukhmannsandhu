@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const port = 8080; // or change to 3000 if you prefer
+const port = 8080;
 
 app.get('/', (req, res) => {
   res.json({ message: 'Server is working!' });
