@@ -1,6 +1,13 @@
 DROP DATABASE IF EXISTS DogWalkService;
 CREATE DATABASE DogWalkService;
 USE DogWalkService;
+
+DROP TABLE IF EXISTS WalkRatings;
+DROP TABLE IF EXISTS WalkApplications;
+DROP TABLE IF EXISTS WalkRequests;
+DROP TABLE IF EXISTS Dogs;
+DROP TABLE IF EXISTS Users;
+
 CREATE TABLE Users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
@@ -53,3 +60,14 @@ CREATE TABLE WalkRatings (
     FOREIGN KEY (owner_id) REFERENCES Users(user_id),
     CONSTRAINT unique_rating_per_walk UNIQUE (request_id)
 );
+
+-- Sample Data
+INSERT INTO Users (username, email, password_hash, role)
+VALUES
+  ('owner1', 'owner1@example.com', 'abc123', 'owner'),
+  ('walker1', 'walker1@example.com', 'abc123', 'walker');
+
+INSERT INTO Dogs (owner_id, name, size)
+VALUES
+  (1, 'Buddy', 'medium'),
+  (1, 'Coco', 'small');
