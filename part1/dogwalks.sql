@@ -61,13 +61,29 @@ CREATE TABLE WalkRatings (
     CONSTRAINT unique_rating_per_walk UNIQUE (request_id)
 );
 
--- Sample Data
+-- Sample Users (Total: 5)
 INSERT INTO Users (username, email, password_hash, role)
 VALUES
   ('owner1', 'owner1@example.com', 'abc123', 'owner'),
-  ('walker1', 'walker1@example.com', 'abc123', 'walker');
+  ('walker1', 'walker1@example.com', 'abc123', 'walker'),
+  ('alice123', 'alice@example.com', 'hashed123', 'owner'),
+  ('bobwalker', 'bob@example.com', 'hashed456', 'walker'),
+  ('carol123', 'carol@example.com', 'hashed789', 'owner');
 
+-- Sample Dogs (Total: 5)
 INSERT INTO Dogs (owner_id, name, size)
 VALUES
-  (1, 'Buddy', 'medium'),
-  (1, 'Coco', 'small');
+  ((SELECT user_id FROM Users WHERE username = 'owner1'), 'Buddy', 'medium'),
+  ((SELECT user_id FROM Users WHERE username = 'owner1'), 'Coco', 'small'),
+  ((SELECT user_id FROM Users WHERE username = 'alice123'), 'Max', 'medium'),
+  ((SELECT user_id FROM Users WHERE username = 'carol123'), 'Bella', 'small'),
+  ((SELECT user_id FROM Users WHERE username = 'carol123'), 'Rocky', 'large');
+
+-- Sample Walk Requests (Total: 5)
+INSERT INTO WalkRequests (dog_id, requested_time, duration_minutes, location, status)
+VALUES
+  ((SELECT dog_id FROM Dogs WHERE name = 'Max'), '2025-06-10 08:00:00', 30, 'Parklands', 'open'),
+  ((SELECT dog_id FROM Dogs WHERE name = 'Bella'), '2025-06-10 09:30:00', 45, 'Beachside Ave', 'accepted'),
+  ((SELECT dog_id FROM Dogs WHERE name = 'Buddy'), '2025-06-11 10:15:00', 25, 'Main Street', 'open'),
+  ((SELECT dog_id FROM Dogs WHERE name = 'Coco'), '2025-06-12 15:00:00', 35, 'Botanic Gardens', 'completed'),
+  ((SELECT dog_id FROM Dogs WHERE name = 'Rocky'), '2025-06-13 17:45:00', 40, 'Riverside Track', 'cancelled');
