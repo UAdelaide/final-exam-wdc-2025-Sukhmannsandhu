@@ -14,6 +14,15 @@ const port = 8080;
 // Middleware
 app.use(express.json());
 
+const session = require('express-session');
+app.use(session({
+  secret: 'your-secret-key',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // set to true if using HTTPS
+}));
+
+
 // ✅ Serve static HTML files from /public
 app.use(express.static(path.join(__dirname, 'public')));
 
