@@ -21,7 +21,7 @@ app.use('/users', userRoutes);
 app.use('/api/dogs', dogRoutes);
 app.use('/api/walkrequests', walkRoutes);
 app.use('/api/walkers', walkerRoutes);
-
+app.use(express.static('public'));
 app.listen(port, () => {
   console.log(`✅ Server is running on port ${port}`);
 });
