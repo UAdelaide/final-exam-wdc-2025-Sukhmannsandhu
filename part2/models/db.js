@@ -1,10 +1,10 @@
 const mysql = require('mysql2/promise');
 
-const db = mysql.createPool({
+const pool = mysql.createPool({
   host: 'localhost',
   user: 'root',
-  password: '', // or your MySQL password if set
-  database: 'DogWalkService'
+  password: '', // use your actual password if any
+  multipleStatements: true // ✅ this is the fix!
 });
 
-module.exports = db;
+module.exports = pool;
