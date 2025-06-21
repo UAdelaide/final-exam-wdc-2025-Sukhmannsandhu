@@ -17,7 +17,7 @@ app.use(session({
 }));
 
 // Routes
-const walkRoutes = require('./routes/walkRoutes');
+const walkRoutes = require('./routes/walkerRoutes');
 app.use('/api/walkrequests', walkRoutes);
 
 // HTML pages
