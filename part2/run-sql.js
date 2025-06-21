@@ -1,16 +1,35 @@
-const fs = require('fs');
-const path = require('path');
-const db = require('./models/db'); // Your database connection
+CREATE DATABASE IF NOT EXISTS DogWalkService;
+USE DogWalkService;
 
-const sqlPath = path.join(__dirname, '../part1/dogwalks.sql'); // Fix this path
-const sql = fs.readFileSync(sqlPath, 'utf8');
+DROP TABLE IF EXISTS WalkRequests;
+DROP TABLE IF EXISTS Dogs;
+DROP TABLE IF EXISTS Users;
 
-db.query(sql)
-  .then(() => {
-    console.log(' dogwalks.sql has been imported successfully.');
-    process.exit(0);
-  })
-  .catch((err) => {
-    console.error(' Error importing SQL file:', err.message);
-    process.exit(1);
-  });
+CREATE TABLE Users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(100) NOT NULL,
+  password VARCHAR(100) NOT NULL,
+  role ENUM('owner', 'walker') NOT NULL
+);
+
+CREATE TABLE Dogs (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  owner_id INT,
+  name VARCHAR(50),
+  FOREIGN KEY (owner_id) REFERENCES Users(id)
+);
+
+CREATE TABLE WalkRequests (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  owner_id INT,
+  dog_id INT,
+  requested_datetime DATETIME,
+  duration_minutes INT,
+  location VARCHAR(100),
+  FOREIGN KEY (owner_id) REFERENCES Users(id),
+  FOREIGN KEY (dog_id) REFERENCES Dogs(id)
+);
+
+-- Insert default user and dog
+INSERT INTO Users (email, password, role) VALUES ('owner1@example.com', 'password123', 'owner');
+INSERT INTO Dogs (owner_id, name) VALUES (1, 'Bruno');
