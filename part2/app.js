@@ -1,43 +1,42 @@
 const express = require('express');
+const session = require('express-session');
 const path = require('path');
-const pool = require('./models/db');
-
-// Route files
-const userRoutes = require('./routes/userRoutes');
-const dogRoutes = require('./routes/dogRoutes');
-const walkRoutes = require('./routes/walkRequests'); // MAKE SURE THIS FILE EXISTS
-const walkerRoutes = require('./routes/walkerRoutes');
 
 const app = express();
 const port = 8080;
 
-// Middleware
+// ✅ Middleware
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
-
-const session = require('express-session');
 app.use(session({
-  secret: 'your-secret-key',
+  secret: 'supersecretkey',
   resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false } // set to true if using HTTPS
+  saveUninitialized: true
 }));
 
+// ✅ Routes
+const userRoutes = require('./routes/userRoutes');
+const dogRoutes = require('./routes/dogRoutes');
+const walkRoutes = require('./routes/walkRequests');
+const walkerRoutes = require('./routes/walkerRoutes');
 
-// ✅ Serve static HTML files from /public
-app.use(express.static(path.join(__dirname, 'public')));
-
-// ✅ Homepage route – serve index.html from /public
+// ✅ Serve index.html from /public
 app.get('/', (req, res) => {
   res.sendFile('index.html', { root: path.join(__dirname, 'public') });
 });
 
-// ✅ API Routes
-app.use('/users', userRoutes);
+// ✅ API routes
+app.use('/api/users', userRoutes);
 app.use('/api/dogs', dogRoutes);
 app.use('/api/walkrequests', walkRoutes);
 app.use('/api/walkers', walkerRoutes);
 
-// Start server
+// ✅ NEW: Get current logged-in user info (for debugging)
+app.get('/api/me', (req, res) => {
+  res.json(req.session.user || { error: 'Not logged in' });
+});
+
+// ✅ Start server
 app.listen(port, () => {
   console.log(`✅ Server is running on http://localhost:${port}`);
 });
