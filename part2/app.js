@@ -1,28 +1,26 @@
 const express = require('express');
-const session = require('express-session');
 const path = require('path');
+const session = require('express-session');
+
 const app = express();
 
-// ✅ Middleware
-app.use(express.json());
+// Middleware
 app.use(express.static('public'));
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ✅ Session
+// Session setup
 app.use(session({
-  secret: 'dogsecretkey',
+  secret: 'walkies-secret',
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: true
 }));
 
-// ✅ Routes
-const userRoutes = require('./routes/users');
-const walkRoutes = require('./routes/walks');
+// Routes
+const walkRoutes = require('./routes/walkRoutes');
+app.use('/api/walkrequests', walkRoutes);
 
-app.use('/users', userRoutes);
-app.use('/api/walks', walkRoutes);
-
-// ✅ HTML pages
+// HTML pages
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
 });
@@ -35,8 +33,8 @@ app.get('/walker-dashboard.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/walker-dashboard.html'));
 });
 
-// ✅ Start server
+// Start server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`✅ Server running on http://localhost:${PORT}`);
 });
