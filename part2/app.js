@@ -1,23 +1,18 @@
 const express = require('express');
 const path = require('path');
-const session = require('express-session');
-
 const app = express();
+const db = require('./db');
 
-// Middleware
-app.use(express.static('public'));
+const userRoutes = require('./routes/userRoutes');
+const dogRoutes = require('./routes/dogRoutes');
+const walkRoutes = require('./routes/walkerRoutes'); // For Q13 and Q14 only
+
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Session setup
-app.use(session({
-  secret: 'walkies-secret',
-  resave: false,
-  saveUninitialized: true
-}));
-
-// Routes
-const walkRoutes = require('./routes/walkerRoutes');
+// Register API routes
+app.use('/api/users', userRoutes);
+app.use('/api/dogs', dogRoutes);
 app.use('/api/walkrequests', walkRoutes);
 
 // HTML pages
@@ -29,12 +24,7 @@ app.get('/owner-dashboard.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/owner-dashboard.html'));
 });
 
-app.get('/walker-dashboard.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/walker-dashboard.html'));
-});
-
-// Start server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-  console.log(`✅ Server running on http://localhost:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });
