@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Owner Dashboard</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <style>
+    .logout-btn {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+    }
+    .section-box {
+      background-color: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="container mt-4">
+    <button class="btn btn-danger logout-btn" onclick="logout()">Logout</button>
+    <h1 class="text-primary mb-4">Owner Dashboard</h1>
+
+    <!-- New Walk Request Form -->
+    <div class="section-box mb-4">
+      <h5>Create New Walk Request</h5>
+      <div class="mb-3">
+        <label for="dogSelect" class="form-label">Select Your Dog</label>
+        <select id="dogSelect" class="form-select" v-model="selectedDog">
+          <option disabled value="">-- Choose a dog --</option>
+          <option v-for="dog in dogs" :value="dog.dog_id">{{ dog.name }}</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Requested Date & Time</label>
+        <input type="datetime-local" class="form-control" v-model="requestDateTime" />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Duration (minutes)</label>
+        <input type="number" class="form-control" v-model="duration" />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Location</label>
+        <input type="text" class="form-control" v-model="location" />
+      </div>
+
+      <button class="btn btn-success" @click="createWalk">Create Walk</button>
+    </div>
+
+    <!-- Walk Requests Display -->
+    <div class="section-box">
+      <h5>My Walk Requests</h5>
+      <ul class="list-group mt-2">
+        <li v-if="walkRequests.length === 0" class="list-group-item">No walk requests yet.</li>
+        <li v-for="walk in walkRequests" class="list-group-item">
+          {{ walk.dog_name }} — {{ walk.requested_time }} ({{ walk.duration }} mins) at {{ walk.location }}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Vue & Script -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        dogs: [],
+        selectedDog: '',
+        requestDateTime: '',
+        duration: 30,
+        location: '',
+        walkRequests: []
+      },
+      mounted() {
+        this.fetchDogs();
+        this.fetchWalks();
+      },
+      methods: {
+        fetchDogs() {
+          fetch('/api/dogs/by-owner')
+            .then(res => res.json())
+            .then(data => {
+              this.dogs = data;
+            })
+            .catch(err => console.error('Failed to fetch dogs:', err));
+        },
+        fetchWalks() {
+          fetch('/api/walkrequests/my')
+            .then(res => res.json())
+            .then(data => {
+              this.walkRequests = data;
+            })
+            .catch(err => console.error('Failed to fetch walks:', err));
+        },
+        createWalk() {
+          fetch('/api/walkrequests', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              dog_id: this.selectedDog,
+              requested_time: this.requestDateTime,
+              duration: this.duration,
+              location: this.location
+            })
+          })
+          .then(res => {
+            if (!res.ok) throw new Error('Failed to create walk');
+            return res.json();
+          })
+          .then(data => {
+            alert('Walk created!');
+            this.fetchWalks();
+          })
+          .catch(err => alert('Error creating walk: ' + err.message));
+        }
+      }
+    });
+
+    function logout() {
+      fetch('/api/users/logout', { method: 'POST' })
+        .then(() => window.location.href = '/')
+        .catch(() => alert('Failed to logout'));
+    }
+  </script>
+</body>
+</html>
